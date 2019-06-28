@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserAddressesTable extends Migration
+class CreateUserOauthsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,16 @@ class CreateUserAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_addresses', function (Blueprint $table) {
+        Schema::create('user_oauths', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('country');
-            $table->string('province');
-            $table->string('city');
-            $table->string('district');
-            $table->string('address');
-            $table->unsignedBigInteger('zip');
-            $table->string('contact_name');
-            $table->string('contact_phone');
-            $table->dateTime('last_used_at')->nullable();
+            $table->string('nickname');
+            $table->string('avatar');
+            $table->string('oauth_type');
+            $table->string('oauth_id');
+            $table->string('unionid');
+            $table->string('credential');//access_token
             $table->timestamps();
         });
     }
@@ -37,6 +34,6 @@ class CreateUserAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_addresses');
+        Schema::dropIfExists('users_oauths');
     }
 }

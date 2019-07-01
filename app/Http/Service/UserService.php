@@ -46,20 +46,26 @@ class UserService
 
         if (!count($oauth)){
 
-            $this->save($request,$wxUser);
+            $user = $this->save($request,$wxUser);
 
+        }else{
+
+            $user = $oauth->user;
         }
-
-        $user = $oauth->user;
-
 
         $userToken = $user->createToken($openId);
 
-        $userToken->token->expires_at = now()->addDays(config('passport.tokensExpireIn'));
+        $expireAt = now()->addDays(config('passport.tokensExpireIn'));
+
+        $userToken->token->expires_at = $expireAt;
 
         $userToken->token->save();
 
-        $token = $userToken->accessToken;
+        $token = [
+            'access_token' => $userToken->accessToken,
+            'expires_in' => $expireAt->toDateTimeString(),
+            'token_type' => 'Bearer',
+        ];
 
         return  $token;
     }

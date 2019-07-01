@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserOauth extends Model
 {
     protected $fillable = [
-        'nick_name',
+        'nickname',
         'avatar',
         'oauth_type',
         'oauth_id',

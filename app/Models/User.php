@@ -64,4 +64,16 @@ class User extends Authenticatable
 
         return $this->hasMany(UserOauth::class);
     }
+
+    public function groups()
+    {
+
+        return $this->belongsToMany(UserGroup::class);
+    }
+
+    public function profile()
+    {
+
+        return $this->hasOne(UserProfile::class);
+    }
 }

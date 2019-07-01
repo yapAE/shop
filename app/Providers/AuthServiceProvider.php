@@ -34,6 +34,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(Carbon::now()->addDays(config('passport.tokenExpireIn')));
 
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(config('passport.refreshTokensExpireIn')));
-        //
+
+        //自定义策略文件的寻找逻辑
+        Gate::guessPolicyNamesUsing(function($class){
+
+            return '\\App\\Policies\\'.class_basename($class).'Policy';
+        }) ;
     }
 }

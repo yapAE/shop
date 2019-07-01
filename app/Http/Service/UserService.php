@@ -37,6 +37,11 @@ class UserService
 
     }
 
+    /**
+     * @param $request
+     * @param $wxUser
+     * @return array
+     */
     public function findUserAndSendToken($request,$wxUser)
     {
 
@@ -45,12 +50,14 @@ class UserService
         $oauth = UserOauth::where('oauth_id',$openId)->first();
 
         if (!count($oauth)){
+            //此处判断还需优化
 
             $user = $this->save($request,$wxUser);
 
         }else{
 
             $user = $oauth->user;
+            //更新用户信息
         }
 
         $userToken = $user->createToken($openId);
@@ -70,25 +77,34 @@ class UserService
         return  $token;
     }
 
+    /**
+     * @param $request
+     * @param $wxUser
+     * @return User
+     */
     public function save($request,$wxUser)
     {
+        $nickname = $request->nickname;
+        $avatar = $request->avatar;
         $user = $this->user;
-        $user->name =  $request->nickname;
-        $user->avatar = $request->avatar;
-        $user->gender = $request->gender == '1' ?: '2';
+        $user->name =  $nickname;
         $user->password = $wxUser['session_key'];
         $user->save();
-        //地址这里还要再看看逻辑
-        $user->addresses()->create([
+
+        $user->profile()->create([
+            'nickname' => $nickname,
+            'avatar' => $avatar,
+            'gender' => $request->gender == '1' ?: '2',
             'country' => $request->country?:'',
             'province' => $request->province?:'',
             'city' => $request->city?:'',
         ]);
+
         $user->oauths()->create([
-            'nickname' => $request->nickname,
+            'nickname' => $nickname,
             'oauth_id' => $wxUser['openid'],
             'oauth_type' => 'weChat',
-            'avatar' => str_replace('/132', '/0', $request->avatar),
+            'avatar' => str_replace('/132', '/0', $avatar),
         ]);
 
         return $user;

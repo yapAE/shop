@@ -16,7 +16,7 @@ class UserAddressesController extends ApiController
      */
     public function store(UserAddressRequest $request)
     {
-        
+
         $data = $request->user()->addresses()->create($request->only([
             'province',
             'city',

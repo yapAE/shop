@@ -20,5 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => '/v1'],function (){
 
     Route::post('/user/login','User\UserController@wxLogin');
-    Route::post('/user/address/add','User\UserController@wxLogin');
+    Route::post('/user/address/add','User\UserAddressesController@store');
+    Route::post('/user/address/{UserAddress}/update','User\UserAddressesController@update');
+    Route::get('/user/address/{UserAddress}/restore','User\UserAddressesController@restore');
 });

@@ -17,8 +17,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => '/v1'],function (){
+Route::group(['prefix' => '/v1/users'],function (){
 
-    Route::post('/user/login','User\UserController@wxLogin');
-    Route::post('/user/address/add','User\UserController@wxLogin');
+    Route::post('/login','User\UserController@wxLogin');
+    Route::post('/address/add','User\UserController@wxLogin');
+});
+
+Route::group(['prefix' => '/v1/products'],function (){
+    //favorite
+    Route::get('/{product}/favorite','product\ProductsController@favor');
+    Route::get('/favorites','product\ProductsController@favorites');
+    //
+    Route::get('','Product\ProductsController@index');
+    Route::get('/{product}','product\ProductsController@show');
 });

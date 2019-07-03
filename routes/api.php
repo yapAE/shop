@@ -29,5 +29,11 @@ Route::group(['prefix' => '/v1/products'],function (){
     Route::get('/favorites','product\ProductsController@favorites');
     //
     Route::get('','Product\ProductsController@index');
-    Route::get('/{product}','product\ProductsController@show');
+    Route::get('/{product}','Product\ProductsController@show');
+});
+//Cart;
+Route::group(['prefix' => '/V1/cart'],function (){
+    //add
+    Route::post('/add','Cart\CartController@add');
+
 });

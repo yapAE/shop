@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => '/v1/users'],function (){
 
     Route::post('/login','User\UserController@wxLogin');
-    Route::post('/address/add','User\UserController@wxLogin');
+    Route::post('/address','User\UserAddressesController@store')->middleware('auth:api');
 });
 
 Route::group(['prefix' => '/v1/products'],function (){
@@ -32,8 +32,15 @@ Route::group(['prefix' => '/v1/products'],function (){
     Route::get('/{product}','Product\ProductsController@show');
 });
 //Cart;
-Route::group(['prefix' => '/V1/cart'],function (){
+Route::group(['prefix' => '/v1/cart'],function (){
     //add
+    Route::post('','Cart\CartController@index');
     Route::post('/add','Cart\CartController@add');
+    Route::get('/{sku}','Cart\CartController@remove');
+
+});
+//Order;
+Route::group(['prefix' => 'v1/order'],function(){
+    Route::post('','Order\OrdersController@store');
 
 });

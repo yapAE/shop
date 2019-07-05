@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Requests\UserAddressRequest;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserAddressesController extends ApiController
 {
@@ -16,8 +17,8 @@ class UserAddressesController extends ApiController
      */
     public function store(UserAddressRequest $request)
     {
-        
-        $data = $request->user()->addresses()->create($request->only([
+        $user = Auth::user();
+        $data = $user->addresses()->create($request->only([
             'province',
             'city',
             'district',

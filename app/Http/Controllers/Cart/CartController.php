@@ -5,13 +5,36 @@ namespace App\Http\Controllers\Cart;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\AddCartRequest;
 use App\Models\CartItem;
+use App\Models\ProductSku;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends ApiController
 {
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request)
+    {
 
+        $user = Auth::user();
+
+        $cartItems = $user->cartItem()->with(['productSku.product'])->get();
+
+        $addresses = $user->addresses()->orderBy('last_used_at','desc')->get();
+
+        $data = [
+            'cartItem'  => $cartItems,
+            'addresses' => $addresses,
+        ];
+/*        foreach ($cartItems as &$item){
+            $item['sum'] = $item['product_sku'] * $item['amount'];
+
+        }*/
+        return  $this->success($data);
+    }
     /**
      * @param AddCartRequest $request
      * @return \Illuminate\Http\JsonResponse
@@ -39,5 +62,18 @@ class CartController extends ApiController
             $cart->save();
         }
         return  $this->success($cart);
+    }
+
+    /**
+     * @param ProductSku $productSku
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function remove(ProductSku $productSku,Request $request)
+    {
+
+        Auth::user()->cartItem()->where('product_sku_id',$productSku->id)->delete();
+
+        return  $this->message('已移除');
     }
 }
